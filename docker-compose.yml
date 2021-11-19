@@ -1,0 +1,335 @@
+version: '3'
+services:
+
+  ####### NO DROP #########
+  ####### NO DROP #########
+  ####### NO DROP #########
+  no-drop-server:
+    container_name: no-drop-server
+    image: austinjhunt/py-tcp-over-udp
+    # only need one server container
+    command: >
+      python3 driver.py --server
+      --server_udp_ip 0.0.0.0
+      --server_udp_port 5008
+      --verbose
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0
+      --p_drop_client 0
+    expose:
+      - 5008
+    networks:
+      - tcp-over-udp-network
+    depends_on:
+      - no-drop-channel
+
+  no-drop-channel:
+    container_name: no-drop-channel
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --channel
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0
+      --p_drop_client 0
+      --udp_port_channel 5007
+      --server_udp_ip no-drop-server
+      --server_udp_port 5008
+      --verbose
+    expose:
+      - 5007
+    networks:
+      - tcp-over-udp-network
+
+  no-drop-client:
+    container_name: no-drop-client
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --client
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0
+      --p_drop_client 0
+      -f /messages/client-send-cheeseipsum.txt
+      --dump_couchdb
+      --server_udp_ip no-drop-channel
+      --server_udp_port 5007
+      --verbose
+      --timeout 1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+      - COUCHDB_SERVER=couchdb:5984
+      - COUCHDB_DATABASE=analytics
+    networks:
+      - tcp-over-udp-network
+      - db-network
+    depends_on:
+    - no-drop-channel
+    - no-drop-server
+
+  ####### END NO DROP #########
+  ####### END NO DROP #########
+  ####### END NO DROP #########
+
+
+  ####### QUARTER DROP ########
+  ####### QUARTER DROP ########
+  ####### QUARTER DROP ########
+
+  quarter-drop-server:
+    container_name: quarter-drop-server
+    image: austinjhunt/py-tcp-over-udp
+    # only need one server container
+    command: >
+      python3 driver.py --server
+      --server_udp_ip 0.0.0.0
+      --server_udp_port 5008
+      --verbose
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.25
+      --p_drop_client 0.25
+    expose:
+      - 5008
+    networks:
+      - tcp-over-udp-network
+    depends_on:
+      - quarter-drop-channel
+
+  quarter-drop-channel:
+    container_name: quarter-drop-channel
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --channel
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.25
+      --p_drop_client 0.25
+      --server_udp_ip quarter-drop-server
+      --server_udp_port 5008
+      --udp_port_channel 5007
+      --verbose
+    expose:
+      - 5007
+    networks:
+      - tcp-over-udp-network
+
+  quarter-drop-client:
+    container_name: quarter-drop-client
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --client
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.25
+      --p_drop_client 0.25
+      -f /messages/client-send-cheeseipsum.txt
+      --dump_couchdb
+      --server_udp_ip quarter-drop-channel
+      --server_udp_port 5007
+      --verbose
+      --timeout 1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+      - COUCHDB_SERVER=couchdb:5984
+      - COUCHDB_DATABASE=analytics
+    networks:
+      - tcp-over-udp-network
+      - db-network
+    depends_on:
+      - quarter-drop-server
+      - quarter-drop-channel
+
+  ####### HALF DROP ##########
+  ####### HALF DROP ##########
+  ####### HALF DROP ##########
+
+  half-drop-server:
+    container_name: half-drop-server
+    image: austinjhunt/py-tcp-over-udp
+    # only need one server container
+    command: >
+      python3 driver.py --server
+      --server_udp_ip 0.0.0.0
+      --server_udp_port 5008
+      --verbose
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.5
+      --p_drop_client 0.5
+    expose:
+      - 5008
+    networks:
+      - tcp-over-udp-network
+    depends_on:
+      - half-drop-channel
+
+  half-drop-channel:
+    container_name: half-drop-channel
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --channel
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.5
+      --p_drop_client 0.5
+      --udp_port_channel 5007
+      --server_udp_ip half-drop-server
+      --server_udp_port 5008
+      --verbose
+    expose:
+      - 5007
+    networks:
+      - tcp-over-udp-network
+
+  half-drop-client:
+    container_name: half-drop-client
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --client
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.5
+      --p_drop_client 0.5
+      -f /messages/client-send-cheeseipsum.txt
+      --dump_couchdb
+      --server_udp_ip half-drop-channel
+      --server_udp_port 5007
+      --verbose
+      --timeout 1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+      - COUCHDB_SERVER=couchdb:5984
+      - COUCHDB_DATABASE=analytics
+    networks:
+      - tcp-over-udp-network
+      - db-network
+    depends_on:
+      - half-drop-channel
+      - half-drop-server
+
+  ####### END HALF DROP ##########
+  ####### END HALF DROP ##########
+  ####### END HALF DROP ##########
+
+  ####### 3/4 DROP ##########
+  ####### 3/4 DROP ##########
+  ####### 3/4 DROP ##########
+  threequarters-drop-server:
+    container_name: threequarters-drop-server
+    image: austinjhunt/py-tcp-over-udp
+    # only need one server container
+    command: >
+      python3 driver.py --server
+      --server_udp_ip 0.0.0.0
+      --server_udp_port 5008
+      --verbose
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.75
+      --p_drop_client 0.75
+    expose:
+      - 5008
+    networks:
+      - tcp-over-udp-network
+    depends_on:
+      - threequarters-drop-channel
+
+  threequarters-drop-channel:
+    container_name: threequarters-drop-channel
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --channel
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.75
+      --p_drop_client 0.75
+      --udp_port_channel 5007
+      --server_udp_ip threequarters-drop-server
+      --server_udp_port 5008
+      --verbose
+    expose:
+      - 5007
+    networks:
+      - tcp-over-udp-network
+
+  threequarters-drop-client:
+    container_name: threequarters-drop-client
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --client
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.75
+      --p_drop_client 0.75
+      -f /messages/client-send-cheeseipsum.txt
+      --dump_couchdb
+      --server_udp_ip threequarters-drop-channel
+      --server_udp_port 5007
+      --verbose
+      --timeout 1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+      - COUCHDB_SERVER=couchdb:5984
+      - COUCHDB_DATABASE=analytics
+    networks:
+      - tcp-over-udp-network
+      - db-network
+    depends_on:
+      - threequarters-drop-server
+      - threequarters-drop-channel
+
+  ####### END 3/4 DROP ##########
+  ####### END 3/4 DROP ##########
+  ####### END 3/4 DROP ##########
+
+  aggregator:
+    container_name: aggregator
+    image: austinjhunt/py-tcp-over-udp
+    command: >
+      python3 driver.py --aggregator
+      --channel_sleep_v 0.05
+      --channel_sleep_factor 4
+      --p_drop_server 0.75
+      --p_drop_client 0.75
+      --verbose
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+      - COUCHDB_SERVER=couchdb:5984
+      - COUCHDB_DATABASE=analytics
+    networks:
+      - db-network
+    depends_on:
+      couchdb:
+        condition: service_healthy
+
+  couchdb:
+    container_name: couchdb
+    image: couchdb:latest
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=987456321
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:5984"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ports:
+      - 5984:5984
+    expose:
+      - 5984
+    networks:
+      - db-network
+
+
+networks:
+  db-network:
+    driver: bridge
+  tcp-over-udp-network:
+    driver: bridge

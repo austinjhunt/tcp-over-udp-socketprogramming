@@ -1,0 +1,4 @@
+time_to_ack,chunk,channel_sleep_v,channel_sleep_factor,channel_p_drop_server,channel_p_drop_client
+0.4170491695404053,Hello i am t,0.05,4.0,0.5,0.5
+0.17022013664245605,rying to sen,0.05,4.0,0.5,0.5
+0.22066593170166016,d a message,0.05,4.0,0.5,0.5
