@@ -13,6 +13,79 @@ User Datagram Protocol (UDP) is a minimal protocol running over IP. In this assi
 * Socket Programming
 
 ### Usage Without Docker
+All of the main components in the architecture (client, server, channel, aggregator) are controlled via the [driver](src/driver.py). The following outlines the usage of the driver.
+
+```
+(venv) huntaj-imac:src huntaj$ python driver.py -h
+usage: driver for TCP over UDP simulation [-h] [-c] [-upc UDP_PORT_CHANNEL]
+                                          -sleepv CHANNEL_SLEEP_V -sleepf
+                                          CHANNEL_SLEEP_FACTOR -pds
+                                          P_DROP_SERVER -pdc P_DROP_CLIENT
+                                          [-cli] [-sip SERVER_UDP_IP]
+                                          [-sport SERVER_UDP_PORT]
+                                          [-mss MAX_SEGMENT_SIZE]
+                                          [-to TIMEOUT] [-f MSG_FILE]
+                                          [-m MSG_STRING] [-d DUMP_FOLDER]
+                                          [-cdb] [-srv] [-v] [-agg]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --channel         create a channel
+  -upc UDP_PORT_CHANNEL, --udp_port_channel UDP_PORT_CHANNEL
+                        port for binding socket for client <-> channel
+                        communication
+  -sleepv CHANNEL_SLEEP_V, --channel_sleep_v CHANNEL_SLEEP_V
+                        small sleep: to reduce latency (can speed testing),
+                        set as small as possible (~0.05); to test higher
+                        latency channels, try ~0.25; required for all
+                        components for data/stats logging purposes
+  -sleepf CHANNEL_SLEEP_FACTOR, --channel_sleep_factor CHANNEL_SLEEP_FACTOR
+                        max delay as multiple of sleep_v; do not set too high,
+                        otherwise can cause timeouts; if you see client/server
+                        timeouts, may need to adjust timeouts in your
+                        client/server; recommended client timeout: ~3s with
+                        these default parameters; required for all components
+                        for data/stats logging purposes
+  -pds P_DROP_SERVER, --p_drop_server P_DROP_SERVER
+                        probability of channel dropping an ACK from server to
+                        client; required for all components for data/stats
+                        logging purposes
+  -pdc P_DROP_CLIENT, --p_drop_client P_DROP_CLIENT
+                        probability of channel dropping a message from client
+                        to server; required for all components for data/stats
+                        logging purposes
+  -cli, --client        create a "TCP" over UDP client
+  -sip SERVER_UDP_IP, --server_udp_ip SERVER_UDP_IP
+                        IP address of UDP server
+  -sport SERVER_UDP_PORT, --server_udp_port SERVER_UDP_PORT
+                        UDP Server port
+  -mss MAX_SEGMENT_SIZE, --max_segment_size MAX_SEGMENT_SIZE
+                        max number of bytes client can receive or send in
+                        single segment
+  -to TIMEOUT, --timeout TIMEOUT
+                        socket timeout
+  -f MSG_FILE, --msg_file MSG_FILE
+                        optional with -cli; filename to read from to produce
+                        message that gets sent to UDP server
+  -m MSG_STRING, --msg_string MSG_STRING
+                        optional with -cli; message to send "reliably" to UDP
+                        server
+  -d DUMP_FOLDER, --dump_folder DUMP_FOLDER
+                        path to folder in which data (times for messages as
+                        they relate to channel properties) should be written
+                        by the client
+  -cdb, --dump_couchdb  dump time data to couchdb; this depends on COUCHDB_*
+                        environment variables COUCHDB_USER, COUCHDB_SERVER,
+                        COUCHDB_PASSWORD, COUCHDB_DATABASE; only works with
+                        --client
+  -srv, --server        create a "TCP" over UDP server
+  -v, --verbose         use verbose logging
+  -agg, --aggregator    run an aggregator (reads from couchdb database using
+                        COUCHDB_* environment variables to calculate average
+                        time_to_ack for each combination of channel properties
+                        (sleepv, sleepfactor, pdropserver, pdropclient) using
+                        MapReduce
+```
 Execute the following commands from the `src` folder to create the respective components.
 #### Client
 ```
