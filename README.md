@@ -1,10 +1,16 @@
-# Computer Science 5283 Computer Networks
-## Programming Assignments 2 and 3 - Implementing "TCP" over UDP
+# Implementing a Reliable "Stop-and-Wait" Protocol Over UDP (and testing it with an automated framework)
+## Built for Vanderbilt University CS 5283 Computer Networks - Programming Assignments 2 and 3 - Implementing "TCP" over UDP
 ### Goal: Implement a reliable protocol over UDP
 User Datagram Protocol (UDP) is a minimal protocol running over IP. In this assignment you will implement a reliable message protocol over UDP. The assignment is broken into two milestones, representing programming assignments numbered 2 and 3. You will emulate a subset of TCP protocol. Features to be implemented are:
 - Establish a connections
 - Ordered data transfer
 - Retransmission
+
+### Tools Used
+* Apache Spark
+* CouchDB
+* Docker-Compose, Docker
+* Socket Programming
 
 ### Usage Without Docker
 Execute the following commands from the `src` folder to create the respective components.
