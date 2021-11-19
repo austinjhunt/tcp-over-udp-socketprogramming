@@ -6,19 +6,6 @@ User Datagram Protocol (UDP) is a minimal protocol running over IP. In this assi
 - Ordered data transfer
 - Retransmission
 
-### Milestone 1 (due 11/4/2021) - Programming Assignment 2
-#### Requirements
-##### Establish a Connection
-Implement the TCP 3-way Handshake Protocol. Please refer to Connection establishment section as discussed in class, or e.g. here: [https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_establishment](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Connection_establishment)
-- Server is waiting for a connection
-- Client sends a SYN
-- Server replies with SYN-ACK
-- Client replies with ACK
-
-##### Tear Down a Connection
-Bonus: TIME_WAIT state implementation is bonus points. You won't lose points if you don't implement TIME_WAIT.
-
-
 ### Usage Without Docker
 Execute the following commands from the `src` folder to create the respective components.
 #### Client
