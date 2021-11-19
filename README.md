@@ -9,13 +9,23 @@ User Datagram Protocol (UDP) is a minimal protocol running over IP. In this assi
 ### Usage Without Docker
 Execute the following commands from the `src` folder to create the respective components.
 #### Client
-`python driver.py --client --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 -m "Hello i am trying to send a message" --dump_folder timedata --server_udp_port 5007 --verbose`
+```
+python driver.py --client --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 -m "Hello i am trying to send a message" --dump_folder timedata --server_udp_port 5007 --verbose
+```
+
 or, if you'd rather use file contents for a message instead of a string:
-`python driver.py --client --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 -f path/to/file/with/message --dump_folder timedata --server_udp_port 5007 --verbose`
+
+```
+python driver.py --client --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 -f path/to/file/with/message --dump_folder timedata --server_udp_port 5007 --verbose
+```
 #### Server
-`python driver.py --server --server_udp_ip 127.0.0.1 --server_udp_port 5008 --verbose --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0`
+```
+python driver.py --server --server_udp_ip 127.0.0.1 --server_udp_port 5008 --verbose --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0
+```
 #### Channel
-`python driver.py --channel --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 --udp_port_channel 5007 --verbose`
+```
+python driver.py --channel --channel_sleep_v 0.05 --channel_sleep_factor 4 --p_drop_server 0 --p_drop_client 0 --udp_port_channel 5007 --verbose
+```
 
 
 ### Usage with Docker (Recommended, Includes Analytics)
@@ -61,13 +71,13 @@ Client - Failed to save 0 items
 for the `threequarters-drop-client` service (the client using the most lossy channel), then you can log into the CouchDB web GUI and create the `completed` database to trigger the aggregation.
 4. Then, you can look at the aggregator logs to verify that it is running: `docker logs aggregator`
    1. You will notice that the logs contain a lot of these lines while the aggregator waits on the creation of the 'complete' database in CouchDB:
-    ```
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
-    ```
+```
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+Aggregator - waiting for "complete" database to be created before aggregating data in db analytics
+```
 5. Once you trigger the aggregator, give it a few moments and then go back to the CouchDB web GUI to see the contents of the new `aggregated_analytics` database, a product of Map Reduce and Apache Spark.
